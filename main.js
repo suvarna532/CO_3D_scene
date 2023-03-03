@@ -34,6 +34,7 @@ class Animation {
         _object[property].z -= step;
       }
     }
+  }
 }
 
 class BasicWorldDemo {
@@ -142,6 +143,8 @@ class BasicWorldDemo {
           let start = new THREE.Vector3((x * 5), 8, (y * 5) + 50);
           let end = new THREE.Vector3((x * 5), 8, (y * 5));
           Animation.interpolate(this.boxes[index], start, end, speed, 'position');
+        }
+      }
       this._threejs.render(this._scene, this._camera);
       this._RAF();
     });
