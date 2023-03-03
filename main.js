@@ -5,12 +5,35 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples
 
 class Animation {
   static interpolate(_object, start, end, step, property) {
-    if (property === 'position') {
-      _object.position.x = start.x + (end.x - start.x) * step;
-      _object.position.y = start.y + (end.y - start.y) * step;
-      _object.position.z = start.z + (end.z - start.z) * step;
+    if (start.x < end.x) {
+      if (_object[property].x < end.x) {
+        _object[property].x += step;
+      }
+    } else if (start.x > end.x) {
+      if (_object[property].x > end.x) {
+        _object[property].x -= step;
+      }
     }
-  }
+    
+    if (start.y < end.y) {
+      if (_object[property].y < end.y) {
+        _object[property].y += step;
+      }
+    } else if (start.y > end.y) {
+      if (_object[property].y > end.y) {
+        _object[property].y -= step;
+      }
+    }
+    
+    if (start.z < end.z) {
+      if (_object[property].z < end.z) {
+        _object[property].z += step;
+      }
+    } else if (start.z > end.z) {
+      if (_object[property].z > end.z) {
+        _object[property].z -= step;
+      }
+    }
 }
 
 class BasicWorldDemo {
@@ -39,7 +62,7 @@ class BasicWorldDemo {
     const fov = 60;
     const aspect = 1900 / 1080;
     const near = 1.0;
-    const far = 1000.0;
+    const far = 500.0;
     this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
     this._scene = new THREE.Scene();
@@ -102,7 +125,7 @@ class BasicWorldDemo {
   _OnWindowResize() {
     this._camera.aspect = window.innerWidth / window.innerHeight;
     this._camera.updateProjectionMatrix();
-    this._threejs.setSize(window.innerWidth, window.innerHeight);
+    this._threejs.setSize(window.innerWidth - 10, window.innerHeight - 10);
   }
 
   _RAF() {
@@ -113,14 +136,16 @@ class BasicWorldDemo {
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
       });
-      this.boxes.forEach((box) => {
-        Animation.interpolate(box, box.position, { x: box.position.x, y: box.position.y, z: box.position.z - 10 }, speed/10, 'position')
-      });
+      for (let x = 0; x < 4; x++) {
+        for (let y = 0; y < 4; y++) {
+          let index = (x * 4) + y;
+          let start = new THREE.Vector3((x * 5), 8, (y * 5) + 50);
+          let end = new THREE.Vector3((x * 5), 8, (y * 5));
+          Animation.interpolate(this.boxes[index], start, end, speed, 'position');
       this._threejs.render(this._scene, this._camera);
       this._RAF();
     });
   }
-
 }
 
 
